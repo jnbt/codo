@@ -161,10 +161,16 @@ module.exports = class Class extends Node
           else
             @className = ''
 
-        for prop in @node.variable.properties
-          if prop.name.value
-            @className += '.' if @className.length > 0
-            @className += prop.name.value
+        prefix = ""
+        for name in _.initial(@fileName.replace(/\.coffee$/, "").replace(/^src\//, "").split("/"))
+          moduleName = name.replace(/[-_\s]+(.)?/g, (match, c) -> c.toUpperCase())
+          moduleName = moduleName.replace(/^(.)/, (match, c) -> c.toUpperCase())
+          if moduleName.toLowerCase() is "ot" or moduleName.toLowerCase() is "ulf"
+            moduleName = moduleName.toUpperCase()
+          prefix += '.' if prefix.length > 0
+          prefix += moduleName
+
+        @className = prefix + "." + @className
 
       @className
 
@@ -211,6 +217,8 @@ module.exports = class Class extends Node
       unless @parentClassName
         if @node.parent
           @parentClassName = @node.parent.base.value
+          if @parentClassName is "View" or @parentClassName is "Collection" or @parentClassName is "Model"
+            @parentClassName = "Backbone.#{@parentClassName}"
 
           # Inner class parent inherits
           # the namespace from the outer class parent
