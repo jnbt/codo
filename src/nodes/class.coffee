@@ -215,10 +215,10 @@ module.exports = class Class extends Node
   getParentClassName: ->
     try
       unless @parentClassName
-        if @node.parent
+        if @doc.inherit
+          @parentClassName = @doc.inherit
+        else if @node.parent
           @parentClassName = @node.parent.base.value
-          if @parentClassName is "View" or @parentClassName is "Collection" or @parentClassName is "Model"
-            @parentClassName = "Backbone.#{@parentClassName}"
 
           # Inner class parent inherits
           # the namespace from the outer class parent

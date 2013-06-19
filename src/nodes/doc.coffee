@@ -263,6 +263,9 @@ module.exports = class Doc extends Node
             authors: doc.authors
             hasComment: -> true
 
+      else if inherit = /^@inherit\s+(.+)/i.exec line
+        @inherit = inherit[1]
+
       else
         comment.push line
 
